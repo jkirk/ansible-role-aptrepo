@@ -23,50 +23,35 @@ None.
 Example Playbook
 ----------------
 
-For this example we will assume you have defined a host group *site* in the inventory file `hosts`.
+For this example we will assume you have defined a host group *megacli* in the inventory file `hosts`.
 
-`site-aptrepo-virtualbox.yml` (taken from https://github.com/jkirk/linux-desktop-bootstrap/blob/main/linux-desktop-virtualbox.yml)
+`site-aptrepo-hwraid.yml`
 
 
 ```yaml
 ---
 
-- name: Install VirtualBox (upstream) for Linux-Desktop
-  hosts: localhost
+- name: Install megacli from hwraid
+  hosts: megacli
   become: yes
   vars:
-    virtualbox_version: "7.2"
-    virtualbox_extpack_version: "7.2.6"
+    aptrepo_apt_key_url: "https://hwraid.le-vert.net/debian/hwraid.le-vert.net.gpg.key"
+    aptrepo_apt_key_file: "hwraid.le-vert.net.asc"
+    aptrepo_apt_repository: "http://hwraid.le-vert.net/debian"
+    aptrepo_apt_release: "{{ ansible_distribution_release }}"
+    aptrepo_apt_component: "main"
+    aptrepo_apt_sources_file: "hwraid.list"
   roles:
     - role: aptrepo
-      aptrepo_apt_key_url: "https://www.virtualbox.org/download/oracle_vbox_2016.asc"
-      aptrepo_apt_key_file: "oracle_vbox_2016.asc"
-      aptrepo_apt_repository: "https://download.virtualbox.org/virtualbox/debian"
-      aptrepo_apt_release: "{{ ansible_distribution_release }}"
-      aptrepo_apt_component: "contrib"
-      aptrepo_apt_sources_file: "virtualbox.list"
 
   tasks:
-    - name: "virtualbox: Install VirtualBox + Linux Kernel Headers"
+    - name: "hwraid: Install megacli + Linux Kernel Headers"
       ansible.builtin.apt:
         name:
-          - "virtualbox-{{ virtualbox_version }}"
-          - "linux-headers-amd64"
-        state: present
-    # NOTE: VirtualBox Extension Pack needs a reboot or modprobe after VirtualBox has been installed
-    - name: "virtualbox: Download VirtualBox Extension Pack"
-      ansible.builtin.get_url:
-        url: https://download.virtualbox.org/virtualbox/{{ virtualbox_extpack_version }}/Oracle_VirtualBox_Extension_Pack-{{ virtualbox_extpack_version }}.vbox-extpack
-        dest: /tmp/Oracle_VirtualBox_Extension_Pack-{{ virtualbox_extpack_version }}.vbox-extpack
-        owner: root
-        group: root
-        mode: 0644
-    - name: "virtualbox: Install VirtualBox Extension Pack"
-      ansible.builtin.shell: VBoxManage extpack install --accept-license=eb31505e56e9b4d0fbca139104da41ac6f6b98f8e78968bdf01b1f3da3c4f9ae --replace /tmp/Oracle_VirtualBox_Extension_Pack-{{ virtualbox_extpack_version }}.vbox-extpack
-
+          - megacli
 ```
 
-To run this playbook you would do `ansible-playbook -K -i hosts site-aptrepo-virtualbox.yml`
+To run this playbook you would do `ansible-playbook -K -i hosts site-aptrepo-hwraid.yml`
 
 License
 -------
