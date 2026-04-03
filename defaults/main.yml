@@ -1,0 +1,7 @@
+---
+aptrepo_apt_release: "{{ ansible_distribution_release }}"
+
+# LMDE uses different codename, but are based on the corresponding Debian releases:
+_aptrepo_release_map:
+  faye: bookworm
+  gigi: trixie

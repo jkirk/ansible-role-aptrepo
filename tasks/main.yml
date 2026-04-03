@@ -1,0 +1,52 @@
+---
+# Role: aptrepo
+#
+# Description:
+#
+#   Add foreign apt repository
+
+- name: Make sure curl + gpg is installed
+  ansible.builtin.apt:
+    name:
+      - curl
+      - gpg
+    state: present
+
+- name: "Check official public software signing key (before download)"
+  ansible.builtin.stat:
+    path: "/etc/apt/keyrings/{{ aptrepo_apt_key_file }}"
+  register: aptrepo_keyfile_before
+
+- name: "Download + install official public software signing key"
+  ansible.builtin.shell: "curl -fsSL {{ aptrepo_apt_key_url }} | gpg --dearmor --yes -o /etc/apt/keyrings/{{ aptrepo_apt_key_file }}"
+  changed_when: false
+
+- name: "Check official public software signing key (after download)"
+  ansible.builtin.stat:
+    path: "/etc/apt/keyrings/{{ aptrepo_apt_key_file }}"
+  register: aptrepo_keyfile_after
+
+- name: "Official public software signing key was added"
+  debug:
+    msg: "/etc/apt/keyrings/{{ aptrepo_apt_key_file }}: added"
+  changed_when: aptrepo_keyfile_after.stat.exists
+  when: not aptrepo_keyfile_before.stat.exists
+  notify: apt update
+
+- name: "Official public software signing key was updated"
+  debug:
+    msg: "/etc/apt/keyrings/{{ aptrepo_apt_key_file }}: sha1 (before): {{ aptrepo_keyfile_before.stat.checksum }} / sha1 (after): {{ aptrepo_keyfile_after.stat.checksum }}"
+  changed_when: not aptrepo_keyfile_before.stat.checksum == aptrepo_keyfile_after.stat.checksum
+  when: aptrepo_keyfile_before.stat.exists
+  notify: apt update
+
+- name: Add apt repository
+  ansible.builtin.copy:
+    content: "deb [signed-by=/etc/apt/keyrings/{{ aptrepo_apt_key_file }}] {{ aptrepo_apt_repository }} {{ _aptrepo_release_map[aptrepo_apt_release] | default(aptrepo_apt_release) }} {{ aptrepo_apt_component }}\n"
+    dest: "/etc/apt/sources.list.d/{{ aptrepo_apt_sources_file }}"
+    mode: 0644
+    owner: root
+    group: root
+  notify: apt update
+- name: Flush handlers
+  meta: flush_handlers
