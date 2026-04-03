@@ -5,23 +5,19 @@
 
 A simple ansible role to set up Debian Apt repositories with GPG key support.
 
-Requirements
-------------
+## Requirements
 
 None.
 
-Default Role Variables
-----------------------
+## Default Role Variables
 
 Role variables are set and documented in [`defaults/main.yml`](defaults/main.yml).
 
-Dependencies
-------------
+## Dependencies
 
 None.
 
-Example Playbook
-----------------
+## Example Playbook
 
 For this example we will assume you have defined a host group *megacli* in the inventory file `hosts`.
 
@@ -53,12 +49,10 @@ For this example we will assume you have defined a host group *megacli* in the i
 
 To run this playbook you would do `ansible-playbook -K -i hosts site-aptrepo-hwraid.yml`
 
-License
--------
+## License
 
 MIT
 
-Author Information
-------------------
+## Author Information
 
 Darshaka Pathirana - <https://synpro.solutions>
