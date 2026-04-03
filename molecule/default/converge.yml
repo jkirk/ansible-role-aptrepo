@@ -1,0 +1,27 @@
+---
+- name: Converge
+  hosts: molecule-debian
+  gather_facts: true
+  vars:
+    aptrepo_apt_key_url: "https://hwraid.le-vert.net/debian/hwraid.le-vert.net.gpg.key"
+    aptrepo_apt_key_file: "hwraid.le-vert.net.asc"
+    aptrepo_apt_repository: "http://hwraid.le-vert.net/debian"
+    aptrepo_apt_release: "{{ ansible_distribution_release }}"
+    aptrepo_apt_component: "main"
+    aptrepo_apt_sources_file: "hwraid.list"
+
+  tasks:
+    - name: Read OS release information
+      ansible.builtin.slurp:
+        src: /etc/os-release
+      register: os_release
+
+    - name: Write OS info to file
+      ansible.builtin.copy:
+        content: "{{ os_release.content | b64decode }}"
+        dest: /tmp/molecule_os_info.txt
+        mode: "0644"
+
+    - name: Apply role under test
+      ansible.builtin.include_role:
+        name: jkirk.aptrepo

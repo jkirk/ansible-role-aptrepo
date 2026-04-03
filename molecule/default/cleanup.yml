@@ -1,0 +1,9 @@
+---
+- name: Verify
+  hosts: molecule
+  gather_facts: true
+  tasks:
+    - name: Read OS info file created during converge
+      ansible.builtin.slurp:
+        src: /tmp/molecule_os_info.txt
+      register: os_info_file

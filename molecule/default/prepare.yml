@@ -1,0 +1,8 @@
+---
+- name: Prepare
+  hosts: molecule-debian
+  gather_facts: true
+  tasks:
+    - name: Update repositories cache
+      ansible.builtin.apt:
+        update_cache: yes
