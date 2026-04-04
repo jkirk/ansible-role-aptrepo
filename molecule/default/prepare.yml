@@ -1,0 +1,18 @@
+---
+- name: Prepare
+  hosts: all
+
+  tasks:
+    - name: Make sure /etc/apt/keyrings exists
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        owner: root
+        group: root
+        mode: '0775'
+        state: directory
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      when: ansible_distribution == "Debian"

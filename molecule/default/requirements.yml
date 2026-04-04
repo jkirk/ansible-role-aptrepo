@@ -1,0 +1,4 @@
+collections:
+- name: community.general
+  # required for e.g. `alternatives` support
+  version: 6.6.2
