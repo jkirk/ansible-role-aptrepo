@@ -1,0 +1,2 @@
+# {{ ansible_managed }}
+deb [signed-by=/etc/apt/keyrings/{{ aptrepo_apt_key_file }}.gpg] {{ aptrepo_apt_repository }} {{ _aptrepo_release_map[aptrepo_apt_release] | default(aptrepo_apt_release) }} {{ aptrepo_apt_component }}

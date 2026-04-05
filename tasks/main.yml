@@ -41,8 +41,8 @@
   notify: apt update
 
 - name: Add apt repository
-  ansible.builtin.copy:
-    content: "deb [signed-by=/etc/apt/keyrings/{{ aptrepo_apt_key_file }}.gpg] {{ aptrepo_apt_repository }} {{ _aptrepo_release_map[aptrepo_apt_release] | default(aptrepo_apt_release) }} {{ aptrepo_apt_component }}\n"
+  ansible.builtin.template:
+    src: aptrepo.j2
     dest: "/etc/apt/sources.list.d/{{ aptrepo_apt_sources_file }}"
     mode: 0644
     owner: root

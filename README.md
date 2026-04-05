@@ -54,7 +54,7 @@ For this example we will assume you have defined a host group *megacli* in the i
     aptrepo_apt_component: "main"
     aptrepo_apt_sources_file: "hwraid.list"
   roles:
-    - role: aptrepo
+    - role: jkirk.aptrepo
 
   tasks:
     - name: "hwraid: Install megacli"

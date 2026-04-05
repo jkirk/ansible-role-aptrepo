@@ -3,7 +3,7 @@
   gather_facts: true
   vars:
     aptrepo_apt_key_url: "https://hwraid.le-vert.net/debian/hwraid.le-vert.net.gpg.key"
-    aptrepo_apt_key_file: "hwraid.le-vert.net.gpg"
+    aptrepo_apt_key_file: "hwraid.le-vert.net"
     aptrepo_apt_repository: "http://hwraid.le-vert.net/debian"
     aptrepo_apt_release: "{{ ansible_distribution_release }}"
     aptrepo_apt_component: "main"
